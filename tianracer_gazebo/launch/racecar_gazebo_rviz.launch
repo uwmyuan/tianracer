@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<launch>
+
+    <include file="$(find tianracer_simulation)/launch/tianracer.launch"></include>
+
+
+    <param name="robot_description" textfile="$(find tianracer_description)/urdf/tianracer_compact.urdf"/>
+    <node name="rviz" pkg="rviz" type="rviz"
+          args="-d $(find tianracer_simulation)/rviz/racecar_urdf.rviz" required="true"/>
+   
+
+</launch>
