@@ -1,0 +1,599 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot name="tianracer"  xmlns:xacro="http://ros.org/wiki/xacro">
+
+ <link name="base_link">
+</link>
+
+<link name="chassis">
+    <inertial>
+      <origin
+        xyz="0.0623235722457065 0.0014584636628485 0.0350371599032402"
+        rpy="0 0 0" />
+      <mass
+        value="5" />
+     <inertia ixx="0.010609" ixy="0"          ixz="0"
+                          iyy="0.050409"   iyz="0"
+                                           izz="0.05865" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://tianracer_description/meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tianracer_description/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="base_link_joint" type="fixed">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <parent link="base_link"/>
+        <child link="chassis" />
+    </joint>
+
+
+
+
+  <link
+    name="left_steering_hinge">
+    <inertial>
+      <origin
+        xyz="0.00160901052986848 0.00421500740928921 0.000999991873067492"
+        rpy="0 0 0" />
+      <mass
+        value="0.34" />
+      <inertia
+        ixx="4E-06"
+        ixy="0"
+        ixz="0"
+        iyy="4E-06"
+        iyz="0"
+        izz="4E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tianracer_description/meshes/left_steering_hinge.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tianracer_description/meshes/left_steering_hinge.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+
+
+  <joint
+    name="left_steering_hinge_joint"
+    type="revolute">
+    <origin
+      xyz="0.1237 0.070647 0.0235"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="left_steering_hinge" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.6"
+      upper="0.6"
+      effort="10"
+      velocity="1000" />
+  </joint>
+
+
+
+  <link
+    name="left_front_wheel">
+    <inertial>
+      <origin
+        xyz="-1.16652756898539E-10 0.000722301233977055 -0.000982991824011559"
+        rpy="0 0 0" />
+      <mass
+        value="0.7" />
+     <inertia ixx="0.00026046" ixy="0"          ixz="0"
+                            iyy="0.00026046" iyz="0"
+                                             izz="0.00041226" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tianracer_description/meshes/left_front_wheel.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tianracer_description/meshes/left_front_wheel.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint
+    name="left_front_wheel_joint"
+    type="continuous">
+    <origin
+      xyz="0 0.015649 0"
+      rpy="0 0 0" />
+    <parent
+      link="left_steering_hinge" />
+    <child
+      link="left_front_wheel" />
+    <axis
+      xyz="0 1 0" />
+  </joint>
+
+
+  <link
+    name="right_steering_hinge">
+    <inertial>
+      <origin
+        xyz="0.00160901052986852 -0.00421500740928916 0.00100000812693248"
+        rpy="0 0 0" />
+      <mass
+        value="0.34" />
+      <inertia
+         ixx="4E-06"
+        ixy="0"
+        ixz="0"
+        iyy="4E-06"
+        iyz="0"
+        izz="4E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tianracer_description/meshes/right_steering_hinge.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tianracer_description/meshes/right_steering_hinge.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+
+  <joint
+    name="right_steering_hinge_joint"
+    type="revolute">
+    <origin
+      xyz="0.12626 -0.065953 0.0235"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="right_steering_hinge" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.6"
+      upper="0.6"
+      effort="10"
+      velocity="1000" />
+  </joint>
+
+
+  <link
+    name="right_front_wheel">
+    <inertial>
+      <origin
+        xyz="1.16652479342783E-10 -0.000722301233976874 -0.000982991824011684"
+        rpy="0 0 0" />
+      <mass
+        value="0.7" />
+      <inertia ixx="0.00026046" ixy="0"          ixz="0"
+                            iyy="0.00026046" iyz="0"
+                                             izz="0.00041226" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tianracer_description/meshes/right_front_wheel.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tianracer_description/meshes/right_front_wheel.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+
+  <joint
+    name="right_front_wheel_joint"
+    type="continuous">
+    <origin
+      xyz="0 -0.015649 0"
+      rpy="0 0 0" />
+    <parent
+      link="right_steering_hinge" />
+    <child
+      link="right_front_wheel" />
+    <axis
+      xyz="0 1 0" />
+  </joint>
+
+
+
+  <link
+    name="left_rear_wheel">
+    <inertial>
+      <origin
+        xyz="-6.22009417952651E-06 0.000722301233977513 1.58299866985546E-05"
+        rpy="0 0 0" />
+      <mass
+        value="0.7" />
+     <inertia ixx="0.00026046" ixy="0"          ixz="0"
+                            iyy="0.00026046" iyz="0"
+                                             izz="0.00041226" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tianracer_description/meshes/left_rear_wheel.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tianracer_description/meshes/left_rear_wheel.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+
+
+  <joint
+    name="left_rear_wheel_joint"
+    type="continuous">
+    <origin
+      xyz="-0.12626 0.081602 0.0225"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="left_rear_wheel" />
+    <axis
+      xyz="0 1 0" />
+  </joint>
+
+
+
+
+  <link
+    name="right_rear_wheel">
+    <inertial>
+      <origin
+        xyz="5.49312575473526E-06 -0.000722301233977277 1.60966959317256E-05"
+        rpy="0 0 0" />
+      <mass
+        value="0.7" />
+        <inertia ixx="0.00026046" ixy="0"          ixz="0"
+                            iyy="0.00026046" iyz="0"
+                                             izz="0.00041226" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh  filename="package://tianracer_description/meshes/right_rear_wheel.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tianracer_description/meshes/right_rear_wheel.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+
+  <joint
+    name="right_rear_wheel_joint"
+    type="continuous">
+    <origin
+      xyz="-0.1237 -0.086296 0.0225"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="right_rear_wheel" />
+    <axis
+      xyz="0 1 0" />
+  </joint>
+
+
+
+  <link
+    name="lidar">
+    <inertial>
+      <origin
+        xyz="-0.0120919804823413 0.0023160815953297 -0.0191850779635995"
+        rpy="0 0 0" />
+      <mass
+        value="0.0792224121739075" />
+      <inertia
+        ixx="2.10579541640659E-05"
+        ixy="-1.189626176555E-07"
+        ixz="4.23690141563745E-07"
+        iyy="2.51190032657276E-05"
+        iyz="-7.86831091483644E-09"
+        izz="4.38241306407012E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tianracer_description/meshes/lidar.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tianracer_description/meshes/lidar.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="lidar_joint"
+    type="fixed">
+    <origin
+      xyz="0.093603 -8.284E-05 0.12377"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="lidar" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="camera">
+    <inertial>
+      <origin
+        xyz="-0.00831465204525364 0.000297862545499916 -0.000809694900417546"
+        rpy="0 0 0" />
+      <mass
+        value="0.0203878842392581" />
+      <inertia
+        ixx="4.0787812214101E-06"
+        ixy="-1.28709200468823E-08"
+        ixz="-1.65865223773842E-08"
+        iyy="3.17565570823081E-06"
+        iyz="-1.52713816393124E-08"
+        izz="2.98536150732633E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tianracer_description/meshes/camera.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.43921568627451 0.43921568627451 0.43921568627451 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tianracer_description/meshes/camera.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="camera_joint"
+    type="fixed">
+    <origin
+      xyz="0.14851 0.0022137 0.0975"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="camera" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="real_sense">
+    <inertial>
+      <origin
+        xyz="-0.00975078931607951 0.00306064913353049 -7.04374991291334E-05"
+        rpy="0 0 0" />
+      <mass
+        value="0.103311749598955" />
+      <inertia
+        ixx="7.35323632954531E-05"
+        ixy="3.0437488683846E-06"
+        ixz="2.08538534427428E-08"
+        iyy="7.40427481540393E-06"
+        iyz="-1.93018760531168E-08"
+        izz="7.2832884533889E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tianracer_description/meshes/real_sense.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.666666666666667 0.698039215686274 0.768627450980392 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tianracer_description/meshes/real_sense.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="real_sense_joint"
+    type="fixed">
+    <origin
+      xyz="0.19864 0.0038046 0.052021"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="real_sense" />
+    <axis
+      xyz="0 0 0" />
+  </joint> 
+  <transmission name="right_steering_hinge_joint_trans">
+		<type>transmission_interface/SimpleTransmission</type>
+		<joint name="right_steering_hinge_joint" >
+			<hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+		</joint>
+		<actuator name="right_steering_hinge_joint_motor">
+			<hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+			<mechanicalReduction>1</mechanicalReduction>
+			<motorTorqueConstant>100</motorTorqueConstant>
+		</actuator>
+	</transmission>
+
+	<transmission name="left_steering_hinge_joint_trans">
+		<type>transmission_interface/SimpleTransmission</type>
+		<joint name="left_steering_hinge_joint" >
+			<hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+		</joint>
+		<actuator name="left_steering_hinge_joint_motor">
+			<hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+			<mechanicalReduction>1</mechanicalReduction>
+			<motorTorqueConstant>100</motorTorqueConstant>
+		</actuator>
+	</transmission>
+
+
+	<transmission name="right_rear_wheel_joint_trans">
+		<type>transmission_interface/SimpleTransmission</type>
+		<joint name="right_rear_wheel_joint" >
+			<hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+		</joint>
+		<actuator name="right_rear_wheel_joint_motor">
+			<hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+			<mechanicalReduction>1</mechanicalReduction>
+		</actuator>
+	</transmission>
+
+	<transmission name="left_rear_wheel_joint_trans">
+		<type>transmission_interface/SimpleTransmission</type>
+		<joint name="left_rear_wheel_joint" >
+			<hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+		</joint>
+		<actuator name="left_rear_wheel_joint_motor">
+			<hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+			<mechanicalReduction>1</mechanicalReduction>
+		</actuator>
+	</transmission> 
+
+  <xacro:include filename="$(find tianracer_gazebo)/urdf/tianracer.gazebo" /> 
+
+</robot>
