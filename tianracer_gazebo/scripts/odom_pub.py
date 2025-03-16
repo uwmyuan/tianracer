@@ -16,7 +16,7 @@ frame_name  = "odom"
 child_frame_name = "base_footprint"
 pub_name    = "odom_topic"
 imu_name    = "imu_data"
-joint_states_name   = "/tianracer/joint_states"
+joint_states_name   = "/racecar/joint_states"
 # 定义起始坐标
 start_x     = -0.5
 start_y     = 0
@@ -39,7 +39,7 @@ class odom_class:
         self.pub = rospy.Publisher(pub_name, Odometry, queue_size = 1)
         # 发布 tf odom 到 odom_footprint
         self.br = tf2_ros.TransformBroadcaster()
-        # 定义时间差20hz
+        # 定义时间差
         rate = rospy.Rate(20)
         #
         self.now_time_joint = rospy.Time.now().to_sec()
@@ -80,8 +80,8 @@ class odom_class:
         self.odom_tf.header.stamp = rospy.Time.now()
         #try:
         # 编码器 测速
-        lrw_topic = data.name.index('left_rear_wheel')
-        rrw_topic = data.name.index('right_rear_wheel')
+        lrw_topic = data.name.index('left_rear_axle')
+        rrw_topic = data.name.index('right_rear_axle')
         # 平均速度
         velocity = (data.velocity[lrw_topic] + data.velocity[rrw_topic])/(2 * 13.95348)
         # 平均路程

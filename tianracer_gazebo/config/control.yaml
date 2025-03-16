@@ -1,0 +1,34 @@
+tianracer:
+# controls the rear two tires based on individual motors
+# 基于单个电机控制后两个轮胎
+  # Publish all joint states -----------------------------------
+  # 发布所有joint状态 -----------------------------------
+  joint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 50
+  rear_right_velocity_controller:
+    type: velocity_controllers/JointVelocityController
+    joint: right_rear_wheel_joint
+    pid: {p: 100.0, i: 0.01, d: 10.0}
+  rear_left_velocity_controller:
+    type: velocity_controllers/JointVelocityController
+    joint: left_rear_wheel_joint
+    pid: {p: 100.0, i: 0.01, d: 10.0}
+  front_right_steering_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: right_steering_hinge_joint
+    pid: {p: 4.0, i: 2.0, d: 1.0}
+  front_left_steering_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: left_steering_hinge_joint
+    pid: {p: 4.0, i: 2.0, d: 1.0}
+  gazebo_ros_control:
+    pid_gains:
+      right_rear_wheel_joint:
+        p: 100.0
+        i: 0.5
+        d: 0.0
+      left_rear_wheel_joint:
+        p: 100.0
+        i: 0.5
+        d: 0.0
