@@ -1,0 +1,32 @@
+# MPC局部规划器参数配置
+# MPC Local Planner Parameters Configuration
+
+MPCLocalPlannerROS:
+  # 车辆参数 (Vehicle Parameters)
+  veh_wb: 0.26                  # 轴距 [m] (Wheelbase [m])
+  max_steer: 0.7853981634       # 最大转向角 [rad] (45度) (Maximum steering angle [rad] (45 degrees))
+  max_dspeed: 0.5235987756      # 最大转向角速度 [rad/s] (30度/秒) (Maximum steering rate [rad/s] (30 degrees/s))
+  max_speed: 15.2777777778      # 最大速度 [m/s] (55km/h) (Maximum speed [m/s] (55km/h))
+  min_speed: -5.5555555556      # 最小速度 [m/s] (-20km/h) (Minimum speed [m/s] (-20km/h))
+  max_acc: 1.0                  # 最大加速度 [m/s²] (Maximum acceleration [m/s²])
+  
+  # MPC参数 (MPC Parameters)
+  controller_frequency: 10.0    # 控制器频率 [Hz] (Controller frequency [Hz])
+  prediction_horizon: 5         # 预测时间窗口长度 (Prediction horizon length)
+  time_step: 0.1                # 时间步长 [s] (Time step [s])
+  goal_distance_tolerance: 1.5  # 目标距离容差 [m] (Goal distance tolerance [m])
+  stop_speed: 0.1388889         # 停止速度 [m/s] (0.5km/h) (Stop speed [m/s] (0.5km/h))
+  
+  # 代价函数权重 (Cost Function Weights)
+  input_cost_weight: [0.01, 0.01]       # 加速度和转向角的权重 (Weights for acceleration and steering angle)
+  input_diff_cost_weight: [0.01, 1.0]   # 加速度和转向角变化的平滑性 (Smoothness weights for acceleration and steering angle changes)
+  state_cost_weight: [1.0, 1.0, 0.5, 0.5]  # 位置、速度和朝向的跟踪精度 (Tracking accuracy weights for position, velocity and orientation)
+  
+  # 路径跟踪参数 (Path Tracking Parameters)
+  target_speed: 2.7777778       # 目标速度 [m/s] (10km/h) (Target speed [m/s] (10km/h))
+  path_resolution: 0.1          # 路径采样间隔 [m] (Path sampling interval [m])
+  
+  # 话题配置 (Topic Configuration)
+  odom_topic: odom              # 里程计话题 (Odometry topic)
+  cmd_topic: ackermann_cmd_stamped  # 控制命令话题 (Control command topic)
+  use_sim_time: true            # 使用仿真时间 (Use simulation time)

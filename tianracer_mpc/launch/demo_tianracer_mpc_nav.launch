@@ -1,0 +1,83 @@
+<launch>
+    <!-- Config map file -->
+    <arg name="world" default="tianracer_racetrack" />
+    <arg name="robot_name" default="$(optenv TIANRACER_NAME /)" doc="robot name [tianracer_No1, tianracer_No2, tianracer_No3, ...]"/>
+    <arg name="namespace" default="tianracer"/>
+
+    <!-- rviz -->
+    <group if="$(eval arg('robot_name') == '/')">
+
+        <!-- Map server, load map-->
+        <node name="map_server" pkg="map_server" type="map_server" ns="$(arg namespace)" args="$(find tianracer_gazebo)/maps/$(arg world).yaml" >
+            <param name="frame_id" value="map" />
+        </node>
+
+        <!-- launch gazebo simulation environment -->
+        <include file="$(find tianracer_gazebo)/launch/tianracer_on_racetrack.launch">
+            <arg name="world" value="$(arg world)" />
+            <arg name="robot_name" value="$(arg namespace)" />
+        </include>
+
+        <!-- launch tianracer control -->
+        <include file="$(find tianracer_gazebo)/launch/tianracer_control.launch" >
+            <arg name="robot_name" value="$(arg namespace)" />
+        </include>
+
+        <!-- move base with integrated MPC -->
+        <include file="$(find tianracer_mpc)/launch/includes/base.launch.xml" >
+            <arg name="robot_name" value="$(arg namespace)" />
+        </include>
+
+        <!-- AMCL -->
+        <include file="$(find tianracer_gazebo)/launch/includes/amcl.launch.xml" >
+            <arg name="robot_name" value="$(arg namespace)" />
+        </include>
+      
+        <node pkg="rviz" type="rviz" name="rviz" args="-d $(find tianracer_mpc)/rviz/nav.rviz"/>
+    </group>
+
+    <!-- 第二组配置保持类似修改 -->
+    <group unless="$(eval arg('robot_name') == '/')">
+
+        <!-- Map server, load map-->
+        <node name="map_server" pkg="map_server" type="map_server" ns="$(arg robot_name)" args="$(find tianracer_gazebo)/maps/$(arg world).yaml" >
+            <param name="frame_id" value="map" />
+        </node>
+
+        <!-- launch gazebo simulation environment -->
+        <include file="$(find tianracer_gazebo)/launch/tianracer_on_racetrack.launch">
+            <arg name="world" value="$(arg world)" />
+            <arg name="robot_name" value="$(arg robot_name)" />
+        </include>
+
+        <!-- launch tianracer control -->
+        <include file="$(find tianracer_gazebo)/launch/tianracer_control.launch" >
+            <arg name="robot_name" value="$(arg robot_name)" />
+        </include>
+
+        <!-- move base -->
+        <include file="$(find tianracer_mpc)/launch/includes/base.launch.xml" >
+            <arg name="robot_name" value="$(arg robot_name)" />
+        </include>
+
+        <!-- AMCL -->
+        <include file="$(find tianracer_gazebo)/launch/includes/amcl.launch.xml" >
+            <arg name="robot_name" value="$(arg robot_name)" />
+        </include>
+
+        <!-- 替换TEB为MPC控制器 -->
+        <node pkg="tianracer_mpc" type="model_predictive_speed_and_steer_control.py" name="mpc_controller" output="screen" ns="$(arg robot_name)">
+            <!-- MPC参数 -->
+            <param name="robot_name" value="$(arg robot_name)" />
+            <param name="veh_wb" value="0.26" />
+            <param name="max_steer" value="0.7853981634" /> <!-- 45度转换为弧度 -->
+            <param name="max_dspeed" value="0.5235987756" /> <!-- 30度转换为弧度 -->
+            <param name="max_speed" value="15.2777777778" /> <!-- 55km/h转换为m/s -->
+            <param name="min_speed" value="-5.5555555556" /> <!-- -20km/h转换为m/s -->
+            <param name="max_acc" value="1.0" />
+        </node>
+
+        <node pkg="rviz" type="rviz" name="rviz" args="-d $(find tianracer_mpc)/rviz/nav_$(arg robot_name).rviz"/>
+    </group>
+
+</launch>

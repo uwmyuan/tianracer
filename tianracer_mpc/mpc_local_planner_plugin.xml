@@ -1,0 +1,7 @@
+<library path="lib/libmpc_local_planner">
+  <class name="tianracer_mpc/MPCLocalPlannerROS" type="tianracer_mpc::MPCLocalPlannerROS" base_class_type="nav_core::BaseLocalPlanner">
+    <description>
+      基于模型预测控制的本地规划器实现
+    </description>
+  </class>
+</library>
