@@ -1,0 +1,96 @@
+<launch>
+  <!-- 定义三辆小车的名称参数 -->
+  <arg name="robot_name_1" default="tianracer_01" />
+  <arg name="robot_name_2" default="tianracer_02" /> 
+  <arg name="robot_name_3" default="tianracer_03" /> 
+  <!-- 定义前方检测点距离参数 -->
+  <arg name="front_distance" default = "0.1" />
+  <!-- 设置使用仿真时间 -->
+  <param name="use_sim_time" value="true"/>
+
+  <!-- 启动第一辆车(领航车)的仿真环境 -->
+  <include file="$(find tianracer_gazebo)/launch/tianracer_on_racetrack.launch" >
+    <arg name="robot_name" value="$(arg robot_name_1)" />
+    <arg name="world" value="$(find gazebo_ros)/launch/empty_world.launch" />
+    <!-- 设置车辆初始位置和姿态 -->
+    <arg name="x_pos" value="0" />
+    <arg name="y_pos" value="0" />
+    <arg name="z_pos" value="0" />
+    <arg name="R_pos" value="0" />
+    <arg name="P_pos" value="0" />
+    <arg name="Y_pos" value="0" />
+  </include>
+
+  <!-- 启动第二辆车(跟随车)的模型 -->
+  <include file="$(find tianracer_platoon)/launch/model.launch.xml" >
+    <arg name="robot_name" value="$(arg robot_name_2)" />
+    <!-- 设置第二辆车的初始位置，实际位置由静态TF变换控制 -->
+    <arg name="initial_pose_x" value="-0.732"/>
+    <arg name="initial_pose_y" value="0.5"/>
+  </include>
+  <!-- 启动第三辆车(跟随车)的模型 -->
+  <include file="$(find tianracer_platoon)/launch/model.launch.xml" >
+    <arg name="robot_name" value="$(arg robot_name_3)" />
+    <!-- 设置第三辆车的初始位置，实际位置由静态TF变换控制 -->
+    <arg name="initial_pose_x" value="-0.732"/>
+    <arg name="initial_pose_y" value="-0.5"/>
+  </include>
+
+  <!-- 启动三辆车的控制器 -->
+  <!-- 第一辆车(领航车)的控制器 -->
+  <include file="$(find tianracer_gazebo)/launch/tianracer_control.launch" >
+      <arg name="robot_name" value="$(arg robot_name_1)" />
+  </include>
+  <!-- 第二辆车(跟随车)的控制器 -->
+  <include file="$(find tianracer_gazebo)/launch/tianracer_control.launch" >
+      <arg name="robot_name" value="$(arg robot_name_2)" />
+  </include>
+  <!-- 第三辆车(跟随车)的控制器 -->
+  <include file="$(find tianracer_gazebo)/launch/tianracer_control.launch" >
+      <arg name="robot_name" value="$(arg robot_name_3)" />
+  </include>
+
+  <!-- 设置TF坐标变换 -->
+  <!-- 将世界坐标系与各车辆的里程计坐标系连接 -->
+  <node pkg="tf" type="static_transform_publisher" name="world_to_global_1" args="0 0 0 0 0 0 world $(arg robot_name_1)/odom 20" />
+  <node pkg="tf" type="static_transform_publisher" name="world_to_global_2" args="0 0 0 0 0 0 world $(arg robot_name_2)/odom 20" />
+  <node pkg="tf" type="static_transform_publisher" name="world_to_global_3" args="0 0 0 0 0 0 world $(arg robot_name_3)/odom 20" />
+  <!-- 设置第二辆车的目标位置(相对于领航车) -->
+  <node pkg="tf" type="static_transform_publisher" name="robot_2_target" args="-0.666 0.5 0 0 0 0 $(arg robot_name_1)/base_link $(arg robot_name_2)/target 20" />
+  <!-- 设置第三辆车的目标位置(相对于领航车) -->
+  <node pkg="tf" type="static_transform_publisher" name="robot_3_target" args="-0.666 -0.5 0 0 0 0 $(arg robot_name_1)/base_link $(arg robot_name_3)/target 20" />
+  
+  <!-- 添加前方检测点的TF设置，用于避障和跟随 -->
+  <node pkg="tf" type="static_transform_publisher" name="robot_2_front" args="$(arg front_distance) 0 0 0 0 0 $(arg robot_name_2)/base_link $(arg robot_name_2)/front 20" />
+  <node pkg="tf" type="static_transform_publisher" name="robot_3_front" args="$(arg front_distance) 0 0 0 0 0 $(arg robot_name_3)/base_link $(arg robot_name_3)/front 20" />
+
+  <!-- 启动第二辆车的跟随控制节点 -->
+  <node pkg="tianracer_platoon" type="leader_follower.py" name="robot_2_follower" output="screen">
+    <param name="leader_robot_name" value="$(arg robot_name_1)" />
+    <param name="follower_robot_name" value="$(arg robot_name_2)" />
+    <!-- 设置期望跟随距离 -->
+    <param name="expected_distance" value="0.83" />
+    <!-- 设置期望跟随角度(120度，即2π/3) -->
+    <param name="expected_theta" value="$(eval 3.14159 * 2 /3)" />
+    <param name="front_distance" value="$(arg front_distance)" />
+  </node>
+
+  <!-- 启动第三辆车的跟随控制节点 -->
+  <node pkg="tianracer_platoon" type="leader_follower.py" name="robot_3_follower" output="screen">
+    <param name="leader_robot_name" value="$(arg robot_name_1)" />
+    <param name="follower_robot_name" value="$(arg robot_name_3)" />
+    <!-- 设置期望跟随距离 -->
+    <param name="expected_distance" value="0.83" />
+    <!-- 设置期望跟随角度(-120度，即-2π/3) -->
+    <param name="expected_theta" value="$(eval -3.14159 * 2 /3)" />
+    <param name="front_distance" value="$(arg front_distance)" />
+  </node>
+
+  <!-- 启动RVIZ可视化调试工具 -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find tianracer_platoon)/rviz/demo_formation.rviz" />
+
+  <!-- 添加路径规划和跟踪功能，仅为领航车启用 -->
+  <include file="$(find tianracer_platoon)/launch/path_tracking.launch">
+    <arg name="robot_name" value="$(arg robot_name_1)" />
+  </include>
+</launch>

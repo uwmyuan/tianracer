@@ -1,0 +1,18 @@
+<!-- author: @tianbot 
+repo: tianbot/abc_swarm
+license: https://github.com/tianbot/abc_swarm/blob/main/LICENSE -->
+<launch>
+  <arg name="robot_name" default="tianracer_01" />
+  <arg name="plan_topic" default="global_plan" />
+  <group ns="$(arg robot_name)">
+    <node pkg="tianracer_platoon" type="path_planning.py" name="path_planner" output="screen">
+      <param name="robot_name" value="$(arg robot_name)" />
+      <param name="plan_topic" value="$(arg plan_topic)" />
+    </node>
+
+    <node pkg="tianracer_platoon" type="path_tracking.py" name="path_tracker" output="screen">
+      <param name="robot_name" value="$(arg robot_name)" />
+      <param name="plan_topic" value="$(arg plan_topic)" />
+    </node>
+  </group>
+</launch>

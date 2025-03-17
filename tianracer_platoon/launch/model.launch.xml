@@ -1,0 +1,15 @@
+<launch>
+    <!-- tianracer t108机器人，基础参数 -->
+    <arg name="robot_name" />
+    
+    <arg name="model" />
+    <arg name="gui" default="False" />
+    <arg name="initial_pose_x"/>
+    <arg name="initial_pose_y"/>
+    <!-- 加载机器人模型描述参数 -->
+    <group ns="$(arg robot_name)" >
+        <param name="robot_description" command="$(find xacro)/xacro '$(find tianracer_gazebo)/urdf/tianracer_run.xacro' prefix:=$(arg robot_name)" />
+        <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+                args="-urdf -model $(arg robot_name) -param robot_description -x $(arg initial_pose_x) -y $(arg initial_pose_y) " />
+    </group>
+</launch>
